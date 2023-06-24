@@ -99,13 +99,14 @@ app.get('/api/getData', (req, res) => {
 
   app.get('/sse/:terminalId', (req, res) => {
     console.log("IP 1111 " + req.ip)
+    const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
     // Check if an SSE instance already exists for this terminal
     let sse = sseInstances.get(req.ip);
     
     // If not, create a new instance and save it in the map
     if (!sse) {
       sse = new SSE();
-      sseInstances.set(req.ip, sse);
+      sseInstances.set(ipAddress, sse);
     }
     //console.log("done: " + req.params.terminalId)
     // Connect the SSE instance to the response
@@ -113,12 +114,10 @@ app.get('/api/getData', (req, res) => {
   });
 
   app.post('/broadcast/:terminalId', (req, res) => {
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    console.log("IP 2222 " + req.ip)
-    console.log("IP 3333 " + ipAddress)
+   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
     
     const terminalId = req.body.termtype;
-    const sse = sseInstances.get(req.ip);
+    const sse = sseInstances.get(ipAddress);
   
     const scandata = req.body.scandata;
 
@@ -127,7 +126,7 @@ app.get('/api/getData', (req, res) => {
             return product
         }
     })
-    console.log("Data scanned on Node.JS",prod)
+    console.log("Data scanned on Node.JS",ipAddress)
     // If an instance exists, send a message
     if (sse) {
       
