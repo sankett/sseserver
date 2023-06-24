@@ -72,9 +72,8 @@ app.use(session({
   cookie: { secure: 'auto' },
 }));
 
-
 app.get('/', (req, res) => {
-    const ipAddress = req.socket.remoteAddress;
+    const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
     res.send(ipAddress);
 });
 
