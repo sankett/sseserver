@@ -103,7 +103,7 @@ app.get('/api/getData', (req, res) => {
   });
 
   app.get('/sse/:terminalId', (req, res) => {
-    console.log("terminalId: " + req.params.terminalId)
+    console.log("IP 1111 " + req.ip)
     // Check if an SSE instance already exists for this terminal
     let sse = sseInstances.get(req.ip);
     
@@ -119,9 +119,9 @@ app.get('/api/getData', (req, res) => {
 
   app.post('/broadcast/:terminalId', (req, res) => {
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    //console.log(`IP Address: ${ipAddress} -  ${req.ip}`);
-    // Retrieve the SSE instance for this terminal
-    //console.log("termtype",req.body.scandata)
+    console.log("IP 2222 " + req.ip)
+    console.log("IP 3333 " + ipAddress)
+    
     const terminalId = req.body.termtype;
     const sse = sseInstances.get(req.ip);
   
