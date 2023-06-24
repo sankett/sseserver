@@ -101,7 +101,7 @@ app.get('/api/getData', (req, res) => {
     console.log("IP 1111 " + req.ip)
     const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
     // Check if an SSE instance already exists for this terminal
-    let sse = sseInstances.get(req.ip);
+    let sse = sseInstances.get(ipAddress);
     
     // If not, create a new instance and save it in the map
     if (!sse) {
