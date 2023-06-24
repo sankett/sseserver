@@ -7,14 +7,7 @@ const app = express();
 const sseInstances = new Map();
 
 
-//create array of products
-/*const products = [
-  {"id": 1, "name": "Apple", "price": 1.99}, {"id": 2, "name": "Orange", "price": 0.99},
-  {"id": 3, "name": "Banana", "price": 0.49}, {"id": 4, "name": "Pineapple", "price": 2.99},
-  {"id": 5, "name": "Mango", "price": 1.49}, {"id": 6, "name": "Grapes", "price": 1.99},
-  {"id": 7, "name": "Watermelon", "price": 3.99}, {"id": 8, "name": "Strawberry", "price": 1.99},
-  {"id": 9, "name": "Blueberry", "price": 1.99}, {"id": 10, "name": "Raspberry", "price": 1.99},
-];*/
+
 const products = [
   { 
   id: 1, 
@@ -68,7 +61,7 @@ const products = [
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: 'http://localhost:3000', // replace with the origin of your React app
+    origin: '*', // replace with the origin of your React app
     credentials: true, // this allows session cookies to be sent cross-origin
   }));
 
