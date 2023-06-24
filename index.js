@@ -72,14 +72,10 @@ app.use(session({
   cookie: { secure: 'auto' },
 }));
 
+
 app.get('/', (req, res) => {
-  if (req.session.views) {
-    req.session.views++;
-    res.send(`Number of views: ${req.session.views}`);
-  } else {
-    req.session.views = 1;
-    res.send('Welcome to this page for the first time!');
-  }
+    const ipAddress = req.socket.remoteAddress;
+    res.send(ipAddress);
 });
 
 app.get('/api/getData', (req, res) => {
