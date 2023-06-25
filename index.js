@@ -109,7 +109,7 @@ app.post('/broadcastdata', (req, res) => {
   } else {
     console.log(`Stream not found: ${ipAddress}`);
   }
-
+  res.end();
 });
 
 
