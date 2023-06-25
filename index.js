@@ -100,6 +100,11 @@ app.post('/broadcastdata', (req, res) => {
         return product
     }
   })
+  sseInstances.forEach((sse, key) => {
+    console.log(`Sending message to stream: ${key}`);
+    console.log(`Sending message : ${prod}`);
+    //sse.send(prod);
+  });
 
   const sse = sseInstances.get(ipAddress);
   if (sse) {
