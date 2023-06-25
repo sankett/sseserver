@@ -86,6 +86,7 @@ app.get('/connect', (req, res) => {
     sse = new SSE();
     sseInstances.set(ipAddress, sse);
   }
+  
   sse.init(req, res);
   
   console.log(`New stream opened, id: ${ipAddress}`);
@@ -108,9 +109,13 @@ app.post('/broadcastdata', (req, res) => {
 
   const sse = sseInstances.get(ipAddress);
   if (sse) {
-    console.log(`Sending message to stream: ${ipAddress}`);
-    console.log(`Sending message : ${prod}`);
-    sse.send(prod);
+   
+    sse.send(prod, 'message', { 'Content-Type': 'application/json' }, 2000, (err) => {
+      if (err) {
+        console.log(`Error sending message to stream: ${ipAddress}`);
+        console.log(err);
+      }
+    });
   } else {
     console.log(`Stream not found: ${ipAddress}`);
   }
