@@ -104,7 +104,8 @@ app.post('/publishdata', (req, res) => {
   let client = clients[ipAddress];
 
   if (client) {
-    client.write(`data: ${JSON.stringify(prod)}`);
+    console.log("data",`data: ${req.body.scandata}`)
+    client.write(`data: ${req.body.scandata}`);
   }
   res.sendStatus(200);
 });
