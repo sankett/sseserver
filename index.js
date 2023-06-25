@@ -58,6 +58,7 @@ const products = [
   offers: 'some sample text' ,
   Image: 'https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg' 
  }];
+ let clients = {};
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({
