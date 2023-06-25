@@ -104,9 +104,9 @@ app.post('/publishdata', (req, res) => {
   let client = clients[ipAddress];
 
   if (client) {
-    client.write(prod);
+    client.write(`data: ${JSON.stringify(prod)}`);
   }
-
+  res.sendStatus(200);
 });
 app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
