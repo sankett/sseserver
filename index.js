@@ -80,6 +80,11 @@ app.get('/', (req, res) => {
 app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
   console.log(`Stream opened, ip: ${ipAddress}`);
+  
+  req.on('close', () => {
+    sseInstances.delete(ipAddress);
+    console.log(`Stream closed, id: ${ipAddress}`);
+  });
   let sse = sseInstances.get(ipAddress);
   if (!sse) {
     sse = new SSE();
@@ -88,10 +93,6 @@ app.get('/connect', (req, res) => {
   sse.init(req, res);
   console.log(`Stream opened, id: ${ipAddress}`);
 
-  /*req.on('close', () => {
-    sseInstances.delete(ipAddress);
-    console.log(`Stream closed, id: ${ipAddress}`);
-  });*/
 
   console.log(`New stream opened, id: ${ipAddress}`);
   
