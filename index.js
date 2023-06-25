@@ -77,15 +77,15 @@ app.get('/', (req, res) => {
     res.send(ipAddress);
 });
 
-app.get('/stream', (req, res) => {
+app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
-
+  console.log(`Stream opened, ip: ${ipAddress}`);
   let sse = sseInstances.get(ipAddress);
   if (!sse) {
     sse = new SSE();
     sseInstances.set(ipAddress, sse);
   }
-  stream.init(req, res);
+  sse.init(req, res);
   console.log(`Stream opened, id: ${ipAddress}`);
 
   req.on('close', () => {
