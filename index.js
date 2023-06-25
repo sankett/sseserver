@@ -77,6 +77,36 @@ app.get('/', (req, res) => {
     res.send(ipAddress);
 });
 
+app.get('/events', (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  let clientId = ipAddress;
+  clients[clientId] = res;
+
+  req.on('close', () => {
+    delete clients[clientId];
+  });
+});
+
+app.post('/publishdata', (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+  const scandata = req.body.scandata;
+  const prod = products.find(product => { 
+    if(product.barcode_id == scandata){
+        return product
+    }
+  })
+
+  let client = clients[ipAddress];
+
+  if (client) {
+    client.write(prod);
+  }
+
+});
 app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
   console.log(`Stream opened, ip: ${ipAddress}`);
