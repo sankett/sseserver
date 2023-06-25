@@ -80,20 +80,14 @@ app.get('/', (req, res) => {
 app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
   console.log(`Stream opened, ip: ${ipAddress}`);
-  
-  /*req.on('close', () => {
-    sseInstances.delete(ipAddress);
-    console.log(`Stream closed, id: ${ipAddress}`);
-  });*/
+ 
   let sse = sseInstances.get(ipAddress);
   if (!sse) {
     sse = new SSE();
     sseInstances.set(ipAddress, sse);
   }
   sse.init(req, res);
-  console.log(`Stream opened, id: ${ipAddress}`);
-
-
+  
   console.log(`New stream opened, id: ${ipAddress}`);
   
 });
@@ -110,6 +104,7 @@ app.post('/broadcastdata', (req, res) => {
   const sse = sseInstances.get(ipAddress);
   if (sse) {
     console.log(`Sending message to stream: ${ipAddress}`);
+    console.log(`Sending message : ${prod}`);
     sse.send(prod);
   } else {
     console.log(`Stream not found: ${ipAddress}`);
