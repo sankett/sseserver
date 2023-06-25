@@ -78,37 +78,7 @@ app.get('/', (req, res) => {
     res.send(ipAddress);
 });
 
-app.get('/events', (req, res) => {
-  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
 
-  let clientId = ipAddress;
-  clients[clientId] = res;
-
-  req.on('close', () => {
-    delete clients[clientId];
-  });
-});
-
-app.post('/publishdata', (req, res) => {
-  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
-  const scandata = req.body.scandata;
-  const prod = products.find(product => { 
-    if(product.barcode_id == scandata){
-        return product
-    }
-  })
-
-  let client = clients[ipAddress];
-
-  if (client) {
-    console.log("data",`data: ${req.body.scandata}`)
-    client.write(`data: ${req.body.scandata}`);
-  }
-  res.sendStatus(200);
-});
 app.get('/connect', (req, res) => {
   const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
   console.log(`Stream opened, ip: ${ipAddress}`);
@@ -133,12 +103,7 @@ app.post('/broadcastdata', (req, res) => {
         return product
     }
   })
-  sseInstances.forEach((sse, key) => {
-    console.log(`Sending message to stream: ${key}`);
-    console.log(`Sending message : ${prod}`);
-    //sse.send(prod);
-  });
-
+  
   const sse = sseInstances.get(ipAddress);
   if (sse) {
    
@@ -151,7 +116,7 @@ app.post('/broadcastdata', (req, res) => {
   } else {
     console.log(`Stream not found: ${ipAddress}`);
   }
-  res.end();
+  res.sendStatus(200);
 });
 
 
