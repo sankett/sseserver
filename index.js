@@ -82,14 +82,14 @@ app.get('/stream', (req, res) => {
 
   let sse = sseInstances.get(ipAddress);
   if (!sse) {
-    const stream = new SSE();
-    sseInstances.set(ipAddress, stream);
+    sse = new SSE();
+    sseInstances.set(ipAddress, sse);
   }
   stream.init(req, res);
   console.log(`Stream opened, id: ${ipAddress}`);
 
   req.on('close', () => {
-    streams.delete(ipAddress);
+    sseInstances.delete(ipAddress);
     console.log(`Stream closed, id: ${ipAddress}`);
   });
 
