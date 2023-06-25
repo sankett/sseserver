@@ -88,10 +88,10 @@ app.get('/connect', (req, res) => {
   sse.init(req, res);
   console.log(`Stream opened, id: ${ipAddress}`);
 
-  req.on('close', () => {
+  /*req.on('close', () => {
     sseInstances.delete(ipAddress);
     console.log(`Stream closed, id: ${ipAddress}`);
-  });
+  });*/
 
   console.log(`New stream opened, id: ${ipAddress}`);
   
