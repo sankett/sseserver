@@ -77,6 +77,46 @@ app.get('/', (req, res) => {
     res.send(ipAddress);
 });
 
+app.get('/stream', (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+
+  let sse = sseInstances.get(ipAddress);
+  if (!sse) {
+    const stream = new SSE();
+    sseInstances.set(ipAddress, stream);
+  }
+  stream.init(req, res);
+  console.log(`Stream opened, id: ${ipAddress}`);
+
+  req.on('close', () => {
+    streams.delete(ipAddress);
+    console.log(`Stream closed, id: ${ipAddress}`);
+  });
+
+  console.log(`New stream opened, id: ${ipAddress}`);
+  
+});
+
+app.post('/broadcastdata', (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+  const scandata = req.body.scandata;
+  const prod = products.find(product => { 
+    if(product.barcode_id == scandata){
+        return product
+    }
+  })
+
+  const sse = sseInstances.get(ipAddress);
+  if (sse) {
+    console.log(`Sending message to stream: ${ipAddress}`);
+    sse.send(prod);
+  } else {
+    console.log(`Stream not found: ${ipAddress}`);
+  }
+
+});
+
+
 app.get('/api/getData', (req, res) => {
   finalProducts = [];
     // Assume the barcode data processing happened here
