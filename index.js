@@ -5,7 +5,7 @@ const SSE = require('express-sse');
 const bodyParser = require('body-parser');
 const app = express();
 const sseInstances = new Map();
-
+const path = require('path');
 
 
 const products = [
@@ -58,7 +58,7 @@ const products = [
   offers: 'some sample text' ,
   Image: 'https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg' 
  }];
- 
+
  let clients = {};
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -75,13 +75,19 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
-    const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
-    res.send(ipAddress);
+    //const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+    //res.send(ipAddress);
+    res.sendFile(path.join(__dirname, '/index.html'));
 });
 
+app.get('/ip', (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(",")[0] : req.connection.remoteAddress;
+  res.send(ipAddress);
+  
+});
 
 app.get('/connect', (req, res) => {
-  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+  const ipAddress = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(",")[0] : req.connection.remoteAddress;
   console.log(`Stream opened, ip: ${ipAddress}`);
  
   let sse = sseInstances.get(ipAddress);
@@ -97,7 +103,7 @@ app.get('/connect', (req, res) => {
 });
 
 app.post('/broadcastdata', (req, res) => {
-  const ipAddress = req.headers['x-forwarded-for'].split(",")[0];
+  const ipAddress = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(",")[0] : req.connection.remoteAddress;
   const scandata = req.body.scandata;
   const prod = products.find(product => { 
     if(product.barcode_id == scandata){
