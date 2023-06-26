@@ -187,4 +187,4 @@ app.get('/api/getData', (req, res) => {
     //res.status(204).end();
   });
 
-app.listen(8080, () => console.log('App listening on port 8080'));
+app.listen(3001, () => console.log('App listening on port 3001'));
