@@ -1,0 +1,8 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/6c86d992-1a56-498d-8b4f-44856a4df8a5/resourceGroups/dev/providers/Microsoft.Web/sites/sseapi",
+    "appService.deploySubpath": ".",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}
